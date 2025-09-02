@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-xs m-auto bg-white rounded-xl shadow-md shadow-cyan-800 p-5">
+        <header>
+            <img class="w-20 mx-auto mb-5" src="{{ asset('assets/site/navbar.png') }}" />
+        </header>
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            <div>
+                <label for="inputEmail" class="label-login" for="username">Email</label>
+                <input class="input-login" type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="write your username?" required autofocus>
+            </div>
+            <div>
+                <label for="inputPassword" class="label-login">Password</label>
+                <input class="input-login" type="password" name="password" id="inputPassword" autocomplete="current_password" required placeholder="write your Password?">
+            </div>
+            <div>
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+            </div>
+            <div>
+                <input class="btn-submit" type="submit">
+            </div>
+        </form>
+        <footer>
+            <a class="text-amber-800 hover:text-cyan-800 text-sm float-left" href="#">Forgot Password?</a>
+            <a class="text-amber-800 hover:text-cyan-800 text-sm float-right" href="#">Create Account</a>
+        </footer>
+    </div>
+{% endblock %}

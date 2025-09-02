@@ -1,0 +1,15 @@
+
+{% if photos  is defined %}
+    <!-- Carousel Wrapper -->
+    <div class="overflow-hidden rounded-lg shadow-lg">
+        <!-- Carousel -->
+        <div class="carousel">
+            {% for photo in announce.photos %}
+                <!-- Slide  -->
+                <div class="carousel-item bg-white dark:bg-gray-800">
+                    <img src="{{ asset('assets/uploads/announces/') ~ photo.name }}" alt="{{ photo.name }}" class="w-full h-64 object-cover rounded-md">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
