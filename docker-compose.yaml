@@ -1,0 +1,74 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-blog
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql:rw
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'blog'
+    networks:
+      - dev
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin-blog
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: 'root'
+    networks:
+      - dev
+
+  www:
+    build: docker
+    container_name: docker-blog
+    ports:
+      - "8001:80"
+    volumes:
+      - ./docker/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    networks:
+      - dev
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-blog
+    environment:
+      RABBITMQ_USER: 'guest'
+      RABBITMQ_PASS: 'guest'
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - dev
+
+  mailer:
+    image: axllent/mailpit
+    container_name: mailpit-blog
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - dev
+
+
+  redis:
+    image: redis:5-alpine
+    container_name: redis-blog
+    ports: [ "6379" ]
+    networks:
+      - dev
+
+networks:
+  dev:
+volumes:
+  db-data:
